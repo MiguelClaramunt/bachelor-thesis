@@ -1,0 +1,37 @@
+\section{Antecedentes}
+
+El problema de la detección automática de \textit{fake news} no se ha conceptualizado hasta la publicación de los trabajos de \citet{Flew2012, Cohen2011}. Gracias a los avances en procesado del lenguaje natural, bases de datos e \textit{information retrieval} de la época, la idea es poder ayudar a los periodistas con su tarea de \textit{fact checking} o incluso actualizar en tiempo real estadísticas o hechos automáticamente a medida que van sucediendo, de forma que el lector siempre tenga la última información relevante cuando acceda al artículo.
+
+Los cambios en las tendencias de consumo producidos por la masificación de Internet también han afectado al consumo de noticias, tanto en la cantidad como en la personalización que medios como las redes sociales o algoritmos de \textit{profiling} pueden ofrecer. Gracias a que las redes sociales permiten tener la misma facilidad de acceso sumado a la personalización del contenido ofrecido, los usuarios dependen más de estas para consumir noticias.
+
+Como hemos comentado en la el capítulo \hyperref[chapter:1]{1}, redes sociales como Facebook se han convertido en el medio principal de consumo de noticias en Estados Unidos \citep{Gottfried2016,Reid2017}. En Australia, alrededor del 60 \% de los usuarios de noticias online se pueden categorizar como `de conveniencia', por lo que su fuente de contenido o noticias provendrá de la red social y el medio que más se ajuste a las necesidades del lector \citep{Daniel2009}.
+
+El periodismo de investigación es un proceso muy tedioso, costoso y lento. Este proceso implica consultar fuentes en infinidad de formatos (archivos excel, PDF, páginas web, vídeo, foto, audio, etc.), por lo que es muy complicado de estandarizar. Aunque este proceso no parece ni resulta rentable, es necesario para los medios como forma de mantener una imagen de marca que genere credibilidad.
+
+Hay dos enfoques a este problema: basado en patrones y basado en evidencias.
+
+\textbf{Enfoque basado en patrones.} Los modelos utilizan solamente consideran el estilo o la sintaxis del texto. \citet{Popat2016} implementó el modelo basándose en \textit{features} estilísticas y la postura general del artículo. Otros trabajos se aprovechan de las métricas que proporcionan las redes sociales (\textit{likes}, veces compartido, comentarios, etc. para determinar la `veracidad'\ de una cuenta o medio \citep{Liu2017,Vo2018,Volkova2017,Yu2017,Ajao2019,Popat2016,Benamira2019}. Por último con respecto a minería de datos enfocada a emociones, los trabajos de \citet{Ajao2019,Giachanou2019,Zhang2019} muestran que es viable su implementación.
+
+\textbf{Enfoque basado en evidencias.} Se basan en explorar la similaridad semántica entre \textit{claim} y \textit{evidencia}. Estas evidencias se obtienen a partir de un grafo de conocimiento o páginas de \textit{fact checking} utilizando las \textit{claims} como término de búsqueda. El trabajo de \citet{Popat2018} es el primero en utilizar evidencias para clasificación de noticias, \citet{Ma2019,Wu2021} lo precede.
+
+\section{Tecnologías}
+
+Los trabajos más notables con respecto a esta tarea son los siguientes:
+
+\textbf{DeClarE \citep{Popat2018}.} Utiliza evidencias y contraevidencias obtenidas de Internet para apoyar o refutar una afirmación. El modelo consta de tres componentes principales: un verificador, un extractor de evidencias y un clasificador de afirmaciones. 
+
+El modelo utiliza una combinación de redes neuronales convolucionales (CNN) y redes neuronales recurrentes (RNN) para extraer características de las evidencias y contraevidencias. Las CNN se utilizan para extraer características locales de cada pieza de evidencia, mientras que las RNN se utilizan para capturar las dependencias globales entre diferentes piezas de evidencia. El modelo también utiliza mecanismos de atención para aprender qué piezas de evidencia son más importantes para determinar la veracidad de la afirmación.
+
+\textbf{HAN \citep{Ma2019}.} Explota el proceso de extracción de \textit{features} mediante una \textit{Hierarchical Attention Network} (HAN) y las características visuales de la imagen utilizando \textit{image captioning} y análisis forense. El modelo consta de tres partes principales: codificador, decodificador y detector de noticias falsas. El autoencoder variacional está equipado para aprender modelos de variables inactivas probabilísticas mediante optimización. HAN tiene dos niveles de mecanismos de atención uno a nivel de palabra y otro de oración, lo que le permite atender diferencialmente al contenido más y menos importante al construir la representación del texto verdadero/falso.
+
+\textbf{GET \citep{Xu2022}.} Propone un marco unificado de minería de la estructura semántica de texto mediante grafos, gracias a ellos se puede capturar la dependencia semántica a larga distancia entre fragmentos relevantes, los cuales no suelen ser percibidos por los modelos por esta razón. Después de esta información, el modelo refina el grafo. Finalmente, las representaciones semánticas detalladas se alimentan al módulo de interacción afirmación-evidencia para hacer predicciones.
+
+El modelo GET se compone de cuatro componentes principales: \textit{Graph Construction}, \textit{Graph-based Semantics Encoder}, \textit{Semantic Structure Refinement} y \textit{Attentive Graph Readout Layer}.
+
+El módulo de \textit{Graph Construction} construye un grafo para cada afirmación y sus correspondientes evidencias o pruebas. Los nodos en el grafo representan las palabras en las afirmaciones y pruebas, y las aristas representan sus relaciones semánticas. Después, utilizan un modelo de lenguaje pre-entrenado para obtener \textit{word embeddings} contextualizados de cada nodo.
+
+El módulo \textit{Graph-based Semantics Encoder} codifica las \textit{word embeddings} en un espacio de baja dimensionalidad utilizando una red convolucional basada en grafos (GCN).
+
+El módulo \textit{Semantic Structure Refinement} reduce la redundancia de información realizando el aprendizaje de la estructura del grafo. Captura la dependencia semántica a larga distancia entre fragmentos relevantes dispersos a través de la propagación del vecindario.
+
+Finalmente, el módulo \textit{Attentive Graph Readout Layer} captura las interacciones entre afirmaciones y pruebas utilizando un mecanismo de atención \textit{multi-head}.

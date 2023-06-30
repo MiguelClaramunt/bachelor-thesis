@@ -1,0 +1,14 @@
+Como posibles mejoras para aplicar a la metodología aplicada se sugieren las siguientes propuestas:
+\begin{itemize}
+    \item Probar arquitecturas diferentes a la familia BERT, analizando su efecto en los resultados obtenidos. Un ejemplo puede ser ELECTRA \citep{Clark2020}, utilizado en el trabajo de \citet{Wang2021}.
+    \item Probar a entrenar los modelos un número mayor de épocas, implementando un mecanismo de \textit{early stopping}.
+    \item Realizar el experimento con \textit{datasets} de noticias de diferentes características: mayor variedad de temas y estilos de escritura, diferencias en longitud de los textos, etc.
+    \item Añadir más categorías o \textit{labels} en la clasificación, como sátira.
+    \item Aplicar otras técnicas de \textit{Explainable AI}, como puede ser LIME.
+\end{itemize}
+
+Con respecto a nuevas líneas de investigación, se esbozan las siguientes ideas:
+\begin{itemize}
+    \item Implementar \textit{Multi-task Learning} o Aprendizaje Semi-supervisado, ya que hay indicios de ayudar en el proceso de aprendizaje y mejorar la clasificación \citep{Rei2017}. \citet{Wang2021} tiene una aplicación similar para clasificación de mensajes en situación de desastres.
+    \item Generar un dataset priorizando la calidad de las noticias frente a la cantidad, similar al trabajo desarrollado por \citet{Gunasekar2023}
+\end{itemize}

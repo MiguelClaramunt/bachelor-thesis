@@ -1,0 +1,77 @@
+% \section{Introducción}
+\label{sec:intro}
+El término \emph{fake news} se origina alrededor del año 1890, aunque diferentes variaciones del concepto se remontan al siglo XVI \citep{MerriamWebster}. Estas formas de desinformación han ido evolucionando conjuntamente con los medios de transmisión de las sociedades, desde rumores hasta historias completamente fabricadas \citep{Soll2016}.
+
+Las \emph{fake news} tomaron otra dimensión en las elecciones presidenciales de Estados Unidos en 2016. En los últimos tres meses de campaña electoral las métricas de \emph{engagement} de publicaciones relacionadas con \emph{fake news} superaron a las de los medios tradicionales. Según \citet{Parkinson2016,Read2016,Dewey2014}, Donald Trump no habría sido elegido presidente de los Estados Unidos si no fuera por la influencia de las \emph{fake news}. 
+
+Uno de los casos más notables en relación a esta industria de las \emph{fake news} se origina en la ciudad de Veles, en Macedonia. Allí se coordinan centenares de páginas web que se dedican a redactar \emph{fake news} que circularán por todo el mundo, aunque gran mayoría están dirigidas al público estadounidense, ya que este es aproximadamente 3 veces más rentable \citep{Subramanian2017}. Uno de los `padres'\ de esta industria es Mirko Ceselkoski, que comenzó escribiendo artículos sobre remedios naturales, automóviles y prensa rosa; cambió de un día para otro a escribir \emph{fake news} ya que estas eran aún más lucrativas. Poniéndolo en cifras, se estima que en 2021 aproximadamente un 0.017\% de los ingresos mundiales de publicidad acabó en manos de sitios que generan y difunden noticias falsas, lo que equivale a 2.600 millones de dólares \citep{Skibinski2022}.
+
+% Varios autores han intentado definir el término \emph{fake news}: “artículos de noticias que son intencionada y verificablemente falsos, y que pueden inducir a equívoco a los lectores” \citep{AlcottGentzkow2017}; aunque detallaremos más en profundidad las diferentes interpretaciones en la Sección \hyperref[sec:defs]{2}. 
+
+Existen dos motivos principales los cuales incentivan la difusión de \emph{fake news}:
+\begin{itemize}
+    \item El primer motivo, como se ha dejado entrever anteriormente, es pecuniario: mediante titulares llamativos o historias descabelladas, consiguen llamar la atención del lector, que entra en la página web para conocer más sobre el suceso. Es allí donde a parte de encontrarse con la noticia, se encuentra con una gran cantidad de publicidad, que es la que provee al medio de ingresos, los cuales pueden rondar entre 10.000 y 30.000 dólares mensuales \citep{Sydell2016}.
+    \item El segundo motivo, ideológico: mediante las \emph{fake news} se busca enturbiar la opinión pública o desacreditar ciertos movimientos, colectivos o personalidades para apoyar su ideología o una agenda política determinada \citep{AlcottGentzkow2017,Sydell2016}.
+\end{itemize}
+
+Pero esto no acaba en las páginas web, las redes sociales también sirven de altavoz tanto a las redacciones como a los medios que fabrican noticias falsas. A parte de las motivaciones mencionadas anteriormente, aparecen otros fenómenos propios de estas plataformas. Las redes sociales poseen de mecanismos los cuales permiten que algunas publicaciones se hagan `virales', permitiendo que estas alcancen un público considerablemente mayor. Gracias al uso de bots que diseminan estas \emph{fake news} o interaccionan con las publicaciones, se genera un aura de legitimidad que provoca que estas sean más creíbles y por consecuencia más difundidas. 
+
+Es por ello que el escenario que se dibuja es muy tumultuoso, los medios convencionales y los que difunden \emph{fake news} luchan por encontrar un hueco, mayoritariamente en redes sociales. Según \citet{Reid2017,Gottfried2016}, plataformas como Facebook se han convertido en el medio principal de consumo de noticias en Estados Unidos, aunque esta realidad es extrapolable a gran mayoría de países. 
+
+
+\section{Motivación}
+
+Las fake news se han utilizado para manipular la percepción de la realidad de la población, generando desconfianza, y por consecuencia, conflicto social \citep{CITSa}. Uno de los casos mas señalados es la teoría conspiratoria \emph{Pizzagate} en Estados Unidos, el Asalto al Capitolio de los Estados Unidos en 2021 y las manifestaciones anti-vacunas en la pandemia de COVID-19 por todo el mundo. Como han demostrado estos sucesos, la desinformación no es para nada inocua en la sociedad: el producto de estos eventos han sido tiroteos, disturbios y fallecidos.
+
+Esta es una de las razones principales por las que las \emph{fake news} dibuja una problemática compleja de solucionar en la sociedad actual: se difunden piezas o fragmentos de información independientemente de su veracidad a una velocidad vertiginosa, la cual dificulta la verificación de esta información. Estas noticias a parte de difundirse rápidamente tienen un alcance mundial, pudiendo afectar a la forma en la que nos relacionamos, comunicamos o directamente al mundo que nos rodea.
+
+Una de las herramientas relevantes para luchar contra la desinformación es el \emph{fact-checking}, realizado mayoritariamente por agencias independientes a los medios de comunicación tradicionales, se encargan de elegir temas de actualidad relevantes y verificar mediante evidencias si un hecho concreto es verídico o no; entre estas agencias se encuentran PolitiFact o Snopes, ubicadas en Estados Unidos, aunque existen homólogos en gran mayoría de países.
+
+El proceso de \emph{fact-checking} requiere de una selección de noticias relevantes, búsqueda de evidencias o recursos, análisis de las fuentes, etc., por lo que es un proceso bastante laborioso y mayoritariamente manual. Es por ello que automatizando ciertas partes puede ayudar a agilizar el proceso de \emph{fact-checking}, pudiendo abarcar mayor variedad o cantidad de noticias a tratar o dedicar más tiempo a tareas que no se pueden desarrollar por métodos automáticos.
+
+Gracias a los \emph{Large Language Models} (LLMs), es posible hacer un pre-análisis de las noticias, desarrollando aplicaciones que permitan ejecutar las siguientes funcionalidades:
+\begin{itemize}
+    \item Un clasificador o regresor, que a partir de un fragmento o una noticia completa, sea capaz de predecir si una noticia es verdadera o falsa, o un valor de confianza con respecto a la veracidad de esta, respectivamente.
+    \item Un extractor de palabras clave o conceptos clave, que permita comparar la noticia o un fragmento de esta con otras similares en una base de datos y a partir de este conjunto de noticias obtenido hacer el análisis manual.
+    \item Una aplicación de resumen automático, que permita obtener un resumen del contenido más importante de la noticia, en forma de lenguaje natural.
+\end{itemize}
+
+Además de la aplicación directa de estas tecnologías para agilizar el proceso de \emph{fact-checking}, creemos que también son relevantes los beneficios que estas aplicaciones pueden proporcionar a la sociedad, como es la reducción de los daños que provocan las fake news, concretamente en colectivos minorizados, que suelen ser el `chivo expiatorio', a parte de perpetuar estereotipos y prejuicios, limitando su pleno desarrollo en sociedad.
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+Podemos dividir los objetivos de este trabajo en principales y transversales:
+
+El objetivo principal de este trabajo es de {\ul desarrollar una solución que permita clasificar noticias} y de esta forma, servir como triaje para las personas encargadas en agencias de \emph{fact-checking}. 
+
+Esta clasificación se basará en características estilísticas de los textos, para ello escogeremos dos \emph{datasets} con diferentes características: uno de ellos contendrá todo tipo de recursos estilísticos (palabras capitalizadas, signos de puntuación, etc.), mientras que el segundo estará normalizado. De esta forma podremos determinar en qué medida afectan estos recursos en el rendimiento de los modelos. Otra característica de este último dataset es que contiene diferentes evidencias para la misma noticia o \emph{claim}, por lo que también utilizaremos esto en nuestro análisis, estudiando cómo afecta la cantidad de evidencias en la clasificación.
+
+Para ello, se utilizará una colección de \textit{transformers} basados en la familia de modelos BERT. Estos también serán elegidos de forma que tengamos una gran variedad de tamaños y arquitecturas, permitiéndonos hacer un estudio comparativo de tanto de qué factores, relativos tanto a los modelos como a los datos utilizados, son los que afectan en mayor o menor medida al rendimiento del modelo.
+
+Los objetivos transversales que aparecen al trabajar este tema de investigación son los siguientes:
+
+Un objetivo que aparece al trabajar con los LLMs es {\ul conocer en profundidad cómo funcionan estos modelos}. Para ello, realizaremos una revisión de la literatura de los trabajos relacionados con el tema de investigación, prestando atención en la casuística del problema, cómo han superado los problemas que han tenido durante el proceso de investigación y diferentes enfoques a la hora de evaluar los resultados obtenidos.
+
+Con respecto al objetivo anteriormente mencionado, es imposible conocer a ciencia cierta como funcionan estos modelos por dentro a la hora de realizar predicciones. Es por ello que {\ul aplicaremos técnicas de \textit{Explainable AI} para intentar entender el `razonamiento'\ de estos modelos en el proceso de clasificación}.
+
+Además, estos modelos al estar entrenados de forma no supervisada con datos generados por humanos, inherentemente presentan sesgos. {\ul Conocer estos posibles sesgos y la manera en la los modelos los representan} es crucial para el correcto análisis de los resultados, ya que si no se tienen en cuenta, puede desencadenar en resultados incorrectos o incompletos. Para ello, haremos una revisión bibliográfica de diferentes experimentos realizados para {\ul estudiar los efectos de la arquitectura, el proceso de aprendizaje y otras posibles causas en los sesgos} aprendidos por estos modelos.
+
+Al estudiar el fenómeno de las \emph{fake news} aparece un problema, el cual es la correcta definición del término. Debido a que este ha sido utilizado constantemente por multitud de medios de comunicación, personas públicas y población general, ha llegado un punto en el que ha perdido su significado. Es por ello que nos proponemos como objetivo {\ul definir el término y las posibles implicaciones que pueda tener en nuestro trabajo} haciendo una revisión bibliográfica de los trabajos más relevantes relacionados con este cometido. Gracias a este estudio, podremos enfocar nuestro trabajo de forma eficaz, sabiendo qué es lo que realmente queremos investigar y cuáles son las herramientas y recursos de los que disponemos.
+
+\section{Organización de la memoria}
+
+La memoria consta de 8 capítulos:
+
+\begin{enumerate}
+    \item \textbf{Introducción.} Presenta el problema de las \textit{fake news} y sus implicaciones en la sociedad actual.
+    \item \textbf{Definiciones.} Define el término \textit{fake news} a partir de trabajos anteriores para definir el problema y el área de acción.
+    \item \textbf{Estado del arte.} Resume los antecedentes, aborda y comenta el estado del arte actual, focalizando el estudio en trabajos con técnicas propias de ciencia de datos.
+    \item \textbf{Análisis del problema.} Analiza el problema a abordar: se presenta el conjunto de datos, describiendo su obtención y procesamiento necesarios; plantea y justifica las técnicas que se utilizarán; y presenta los materiales utilizados para la implementación.
+    \item \textbf{Metodología aplicada.} Describe la metodología aplicada, distinguiendo según las técnicas aplicadas.
+    \item \textbf{Resultados obtenidos y evaluación.} Comenta los resultados obtenidos, haciendo énfasis en las métricas utilizadas y seleccionando las técnicas que mejor rendimiento ofrecen. Discute sobre los resultados obtenidos por técnicas de \textit{Explanable AI}. Finalmente se evalúan ambas partes y se discuten las posibles interpretaciones de los resultados.
+    \item \textbf{Discusión.} Discute ciertos aspectos asociados a la metodología, técnicas y modelos utilizados en el trabajo.
+    \item \textbf{Conclusiones.} Sintetiza los hallazgos más importantes del trabajo.
+    \item \textbf{Trabajos futuros.} Propone ampliaciones al trabajo realizado y propuestas de investigación futuras.
+\end{enumerate}
+
