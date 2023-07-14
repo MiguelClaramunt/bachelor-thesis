@@ -224,11 +224,11 @@ En la clasificación de texto, Naïve Bayes funciona calculando la probabilidad 
 
 El algoritmo Naïve Bayes luego calcula la probabilidad de cada clase dada las características de entrada utilizando el teorema de Bayes. Específicamente, calcula la probabilidad previa de cada clase (es decir, la probabilidad de cada clase antes de ver ninguna evidencia), y luego multiplica esto por la verosimilitud de la evidencia dada cada clase (es decir, la probabilidad de ver las características de entrada dadas cada clase). Finalmente, normaliza estas probabilidades para obtener una distribución de probabilidad sobre las clases.
 
-\subsection{Clasificadores lineales: SVM y SGD}
+\subsection{SVM y SGD}
 
-Los clasificadores lineales funcionan aprendiendo una función lineal que mapea las características de entrada a las clases de salida. Por esta razón, son similares a la regresión logística.
+Estos métodos supervisados funcionan aprendiendo una función que mapea las características de entrada a las clases de salida. Por esta razón, son similares a la regresión logística.
 
-Las máquinas de vectores de soporte (SVM) son un tipo de clasificador lineal que funcionan encontrando el hiperplano que separa al máximo las características de entrada en diferentes clases. El hiperplano se elige de manera que maximice el margen entre las clases. El margen se define como la distancia entre el hiperplano y los puntos de datos más cercanos de cada clase.
+Las máquinas de vectores de soporte (SVM) son un tipo de clasificador que funcionan encontrando el hiperplano que separa al máximo las características de entrada en diferentes clases. El hiperplano se elige de manera que maximice el margen entre las clases. El margen se define como la distancia entre el hiperplano y los puntos de datos más cercanos de cada clase.
 
 La función de pérdida del perceptrón es un tipo de función de pérdida que se utiliza para entrenar SVM. Funciona minimizando la distancia entre la salida predicha y la salida verdadera. Específicamente, minimiza la suma de las distancias entre cada salida predicha y su correspondiente salida verdadera.
 

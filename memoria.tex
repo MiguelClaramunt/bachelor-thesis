@@ -1,0 +1,164 @@
+\documentclass[twoside,spanish,a4paper,12pt]{tfg}
+
+\year=2023
+\month=7
+\day=11
+
+% Editar la titulación
+\titulacion{Grado en Ciencia de Datos}
+
+% Editar el título
+\title{Detección de noticias falsas usando Procesado de Lenguaje Natural}
+
+% Si es una alumna se debe usar
+% \authorlabel{Autora}
+\authorlabel{Autor}
+% Editar el nombre
+\author{Miguel Ricardo Claramunt Argote}
+
+
+% Si hay varios tutores:
+% \tutorlabel{Tutores}
+% \tutor{Nombre del tutor 1 \\[2mm] Nombre del turor2}
+% Si el tutor es masculino:
+\tutorlabel{Tutor}
+% \tutorlabel{Tutora}
+% Editar
+\tutor{Joan Vila Francés}
+
+% Editar: Poner mes y año de la convocatoria de lectura del TFM
+\convocatoria{Julio 2023}
+
+\begin{document}
+
+% NO QUITAR ESTOS ELEMENTOS
+\portada
+\cleardoublepage
+% \contraportada
+% \cleardoublepage
+\declaracion
+\cleardoublepage
+
+
+% Editar: Resumen en Español (obligatorio)
+\begin{resumen}
+	Las \textit{fake news} son un fenómeno que ha tomado un gran impacto social estos últimos años y sus efectos tampoco son nimios en la población. Para reducir estos efectos, los medios de comunicación han promovido el \textit{fact checking}, aunque este proceso es extremadamente costoso en todos los ámbitos. Por ello, sería de ayuda un método automático para agilizar este proceso.
+
+	Primeramente, definimos el concepto de \textit{fake news} para tipificar el problema, objetivos y recursos para abordarlo.
+
+	En este trabajo usamos 3 \textit{datasets} y 13 modelos de lenguaje basados en \textit{transformers} para implementar una serie de clasificadores binarios. También aplicamos técnicas de \textit{Explanable AI} (XAI), para comprobar si el entrenamiento sigue el progreso esperado.
+
+	Los mejores resultados se categorizan según diferentes métricas. En líneas generales los modelos LARGE suelen funcionar mejor que los BASE. También, funcionan mejor para detectar noticias verdaderas que falsas. Aplicando XAI concluimos que el aprendizaje no es el idóneo, funcionando solamente como esperábamos en 1 \textit{dataset}.
+
+	Finalmente, se han analizado diferentes aspectos: interpretabilidad de modelos, limitaciones de estos y posibles sesgos en la clasificación.
+\end{resumen}
+\cleardoublepage
+
+% Editar: Resumen en Inglés
+\begin{abstract}
+	Fake news are a phenomenon that gained significant impact on society in recent years -- and its effects on the population are not negligible either. In order to reduce these repercussions, media outlets have advocated fact checking, although this process is extremely costly. Therefore, an automatic method to streamline this process would be beneficial.
+
+	First, we define the concept of fake news to typify the problem, objectives and resources to address it.
+
+	In this work we use 3 datasets and 13 language models based on transformers to implement a series of binary classifiers. We also apply Explanable AI (XAI) techniques to check if the training follows expected progress.
+
+	The best results are categorized according to different metrics. Generally speaking, LARGE models tend to perform better than BASE models. Also, they perform better for detecting true news than fake news. Applying XAI we conclude that learning is not ideal, performing only as expected in 1 dataset.
+
+	Finally, different aspects have been analyzed: model interpretability, limitations of the models and possible biases in the classification.
+\end{abstract}
+\cleardoublepage
+
+% Editar: Resumen en Valenciano
+\begin{resum}
+	Les \textit{fake news} són un fenomen que ha pres un gran impacte social aquests darrers anys i els seus efectes tampoc són nimis a la població. Per reduir aquests efectes, els mitjans de comunicació han promogut el \textit{fact checking}, encara que aquest procés és extremadament costós en tots els àmbits. Per això, seria ajuda un mètode automàtic per agilitzar aquest procés.
+
+	Primerament, definim el concepte de \textit{fake news} per tipificar el problema, objectius i recursos per abordar-lo.
+
+	En aquest treball fem servir 3 \textit{datasets} i 13 models de llenguatge basats en \textit{transformers} per implementar una sèrie de classificadors binaris. També apliquem tècniques de \textit{Explanable AI} (XAI), per comprovar si l\textquotesingle entrenament segueix el progrés esperat.
+
+	Els millors resultats es categoritzen segons diferents mètriques. En línies generals, els models LARGE solen funcionar millor que els BASE. També funcionen millor per detectar notícies veritables que falses. Aplicant XAI concloem que l\textquotesingle aprenentatge no és l\textquotesingle idoni, funcionant només com esperàvem a 1 \textit{dataset}.
+
+	Finalment, s\textquotesingle han analitzat els diferents aspectes: interpretabilitat de models, limitacions d\textquotesingle aquests i possibles biaixos a la classificació.
+\end{resum}
+\cleardoublepage
+
+
+% Editar: Agradecimientos (opcional)
+\begin{agradecimientos}
+	A mi familia, mi madre María Eugenia y mi padre José Ricardo, gracias por confiar en mi y apoyarme incondicionalmente.
+
+	\\
+
+	A todas las personas que han estado a mi lado tanto en València como en Barcelona, gracias por formar parte y haber podido vivir estos años juntos.
+\end{agradecimientos}
+\cleardoublepage
+
+\tableofcontents
+
+\pagestyle{tfg}
+\justify
+
+% Las figuras se buscan en el directorio figs
+
+% Cada capítulo está en su propio fichero tex. Ver el directorio tex.
+
+% La bibliografía está dentro del directorio bib
+\chapter{Introducción}
+\label{chapter:1}
+\input{tex/1-introduccion.tex}
+
+\chapter{Definiciones}
+\label{chapter:2}
+\input{tex/2-definiciones}
+
+\chapter{Estado del arte}
+\label{chapter:3}
+\input{tex/3-estado_arte.tex}
+
+\chapter{Análisis del problema}
+\label{chapter:4}
+\input{tex/4-analisis.tex}
+
+\chapter{Metodología aplicada}
+\label{chapter:5}
+\input{tex/5-metodologia.tex}
+
+\chapter{Resultados obtenidos y evaluación}
+\label{chapter:6}
+\input{tex/6-resultados_evaluacion.tex}
+
+\chapter{Discusión}
+\label{chapter:7}
+\input{tex/7-discusion.tex}
+
+\chapter{Conclusiones}
+\label{chapter:8}
+\input{tex/8-conclusiones.tex}
+
+\chapter{Trabajos futuros}
+\input{tex/9-trabajos_futuros.tex}
+
+
+\nocite{*}
+
+\pagestyle{bib}
+% \chapter*{Bibliografía}
+\addcontentsline{toc}{chapter}{Bibliografía}
+\printbibliography
+\label{Bibliografía}
+% \bibliographystyle{apalike}
+% \bibliography{bib/bibliografia.bib}
+
+\pagestyle{appendix}
+\appendix
+\chapter{Apéndice}
+\input{tex/a-apendice.tex}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
