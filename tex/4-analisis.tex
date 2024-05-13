@@ -1,127 +1,301 @@
-\begin{frame}{4.1. \textit{Claim} y evidencia}
+\section{Estudio preliminar}
+
+En un principio queríamos analizar el discurso de odio y las \emph{fake news} que se difunden por redes sociales, motivado por los trabajos de \citet{Gomez2019,Toraman2022}.
+
+Algunos de los \textit{datasets} considerados fueron los siguientes:
 \begin{itemize}
-    \item \textit{Claim}: equivalente al titular de una noticia, pieza de información a verificar.
-    \item Evidencia: hecho, dato o información que apoya o refuta la \textit{claim}.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{4.2. Dataset: Politifact\footnote{\citep{Popat2017}} y Snopes\footnote{\citep{Vlachos2014}}}
-
-Un \textit{claim} y varias evidencias por noticia. 
-
-\vspace{0.5ex}
-
-Creación de dos datasets, {P-S}\textsubscript{One} y {P-S}\textsubscript{All}:
-\begin{itemize}
-    \item {P-S}\textsubscript{One}: una \textit{claim}, una evidencia elegida aleatoriamente.
-    \item {P-S}\textsubscript{All}: una \textit{claim}, todas las evidencias.
+    \item \underline{VoterFraud2020 \citep{Abilov2021}:} \textit{Dataset} multimodal de \emph{tweets} y \emph{retweets} en inglés que contienen palabras clave y \emph{hashtags} relacionados con alegaciones y reclamaciones sobre fraude electoral en las elecciones presidenciales de Estados Unidos en 2020.
+    \item \underline{Hate Speech Corpus:} \textit{Dataset} en inglés obtenido a partir del trabajo realizado por \citet{Szpakowski2017}. Extraen artículos de medios catalogados por publicar contenido de discurso de odio en Internet. Estos artículos tratan anti-semitismo, misoginia, anti-inmigración/xenofobia, homofobia o discurso de odio en general.
+    \item \underline{MMHS150K \citep{Gomez2019}:} \textit{Dataset} multimodal en inglés que incluye \emph{tweets} e imágenes relacionadas con discurso de odio.
+    \item \underline{Hate + COVID + Temporers \citep{Rodriguez2022}:} \textit{Dataset} de \textit{tweets} en castellano y catalán relacionados con COVID-19 y temporeros en Cataluña, los cuales la mayoría de ellos suelen ser migrantes o pertenecen a poblaciones minorizadas. Los \textit{tweets} se recogieron en el periodo de enero a octubre del 2020, obteniendo un total de 1.062 \textit{tweets}.
 \end{itemize}
 
-% \vspace{1ex}
+Debido a que las pruebas de LLMs con estos \textit{datasets} no obtenían resultados satisfactorios, decidimos redirigir la investigación hacia detección de noticias falsas, las cuales tienen estrecha correlación con el discurso de odio. 
 
-% {P-S}\textsubscript{One} y {P-S}\textsubscript{All}; el primero tendrá, para cada \textit{claim}, una evidencia elegida aleatoriamente; el segundo las tendrá todas.
+Una de las razones por las que creemos que los LLMs no funcionaban con estos \textit{datasets} era por la poca cantidad de texto que contenían en los casos de \citet{Abilov2021,Gomez2019,Rodriguez2022}. Esto se justifica con el hecho de que los datos obtenidos son procedentes de Twitter y en el momento de recolección de los datos existía un límite de 280 caracteres por \emph{tweet}. Al no tener suficiente información de texto por \textit{tweet} y por consecuencia no tener suficiente contexto, suponemos que los LLMs no eran capaces de detectar las características necesarias para realizar la clasificación.
 
-% \vspace{1ex}
+Además, los \textit{datasets} de \citet{Abilov2021,Szpakowski2017} no tenían casos negativos (es decir, muestras que no estuvieran categorizadas como discurso de odio). Esto suponía realizar una creación de un \textit{dataset} de casos negativos, por lo que decidimos finalmente descartar estos \textit{datasets}.
 
-% Existe un pequeño desbalanceo (3:2); no aplicamos ninguna técnica de \textit{Data Augmentation} debido a que no es tan exagerado.
 
-\vspace{2ex}
+\section{Datasets}
 
-% \begin{frame}
-\begin{table}
-    \hfill
+\subsection{Descripción del conjunto de datos}
+
+\subsubsection{Politifact y Snopes}
+
+Snopes \citep{Popat2017} y PolitiFact \citep{Vlachos2014} son dos \textit{datasets} creados a partir de las agencias de \textit{fact-checking} homónimas.
+
+Ambos \textit{datasets} son obtenidos gracias a \citet{Xu2022}, que utilizan ambas páginas para obtener las \textit{claims} y etiquetas para cada noticia (en el caso de Snopes son \textit{True}/\textit{False}). A partir de cada \textit{claim}, obtienen las evidencias y demás información mediante motores de búsqueda. Para el caso de PolitiFact la única diferencia que existe es que se fusionan las clases positivas (\textit{true}, \textit{mostly true} y \textit{half true}) en la categoría \textit{true}, mientras que las negativas (\textit{false}, \textit{mostly false} y \textit{pants on fire}) como \textit{false}. Un último dato relevante sobre este dataset es que está normalizado, por lo que los modelos entrenados con este dataset tendrán solo acceso a la información contextual o estilística de las noticias.
+
+En la figura \hyperref[tab:sp-dataset]{4.1} se pueden encontrar diversas estadísticas sobre el dataset: 
+\begin{table}[H]
+\centering
+\begin{tabular}{ccr}
+\hline
+\textbf{Dataset} & \textbf{Feature} & \textbf{Conteo} \\ \hline
+\multirow{5}{*}{PolitiFact} & True & 1543 \\
+ & False & 1565 \\
+ & Evidences & 3108 \\
+ & Speakers & 137 \\
+ & Publishers & 1064 \\ \hline
+\multirow{5}{*}{Snopes} & True & 690 \\ \
+ & False & 2066 \\
+ & Evidences & 2756 \\
+ & Speakers & N/A \\
+ & Publishers & 1873 \\ \hline
+\end{tabular}
+\caption{Conteo de muestras según \textit{features}.}
+\label{tab:sp-dataset}
+\end{table}
+
+\subsubsection{ISOT Fake News Dataset}
+
+Este conjunto de datos contiene artículos periodísticos reales y falsos. Los artículos reales fueron obtenidos de la agencia de noticias Reuters, mientras que los artículos falsos han sido obtenidos de medios poco fiables catalogados por PolitiFact (una agencia de verificación de noticias de EE.UU.) y Wikipedia. 
+
+\begin{table}[htb]
+    \centering
     \begin{tabular}{ccrr}
         \hline
-        \textbf{Dataset} & \textbf{Etiqueta} & \textbf{\#} & \textbf{\#} \\\hline
+        \multirow{2}{*}{\textbf{News}} & \multicolumn{2}{c}{\textbf{Subjects}}                               & \multicolumn{1}{c}{\multirow{2}{*}{\textbf{Total size}}} \\
+                                       & \footnotesize{\textbf{Type}} & \multicolumn{1}{c}{\footnotesize{\textbf{Size}}} & \multicolumn{1}{c}{}                               \\ \hline
+        \multirow{2}{*}{Real-News} & World-News      & 10145 & \multirow{2}{*}{21417} \\
+                                   & Politics-News   & 11272 &                        \\ \hline
+        \multirow{6}{*}{Fake-News} & Government-News & 1570  & \multirow{6}{*}{23481} \\
+                                   & Middle-East     & 778   &                        \\
+                                   & US News         & 783   &                        \\
+                                   & Left-News       & 4459  &                        \\
+                                   & Politics        & 6841  &                        \\
+                                   & News            & 9050  &                        \\ 
+        \hline
+    \end{tabular}
+    \caption{Conteo de muestras según categorías \citep{Ahmed2017}.}
+    \label{fig:news-dataset}
+\end{table}
+
+
+Los temas que incluye este \textit{dataset} abarcan diferentes ámbitos, aunque como se puede observar en la figura \ref{fig:news-dataset}, la gran mayoría tratan sobre política y actualidad mundial.
+
+Cada artículo contiene la siguiente información: título del artículo, texto, tipología y fecha de publicación. Las noticias recogidas en este \textit{dataset} están limitadas al periodo entre 2016 y 2017. Posteriormente, estas noticias fueron limpiadas y procesadas, aunque en el caso de las noticias falsas no se corrigieron errores tipográficos, en los cuales se incluyen errores ortográficos o de puntuación. 
+
+Este \textit{dataset} mantiene un equilibrio entre clases, por lo que no es necesario aplicar técnicas de \textit{Data Augmentation}. 
+
+\subsection{Procesamiento del conjunto de datos}
+
+\subsubsection{Politifact y Snopes}
+
+Para trabajar con ambos \textit{datasets} fusionaremos ambos \textit{datasets}, creando una nueva columna \texttt{dataset} que indica si pertenece al \textit{dataset} \texttt{politifact/snopes} (por si es necesario en un futuro análisis). Concatenamos los \textit{strings} para el titular y cuerpo de la noticia.
+
+Debido a que contamos con varias evidencias para el mismo \textit{claim}, generaremos dos \textit{datasets} a partir de este, {P-S}\textsubscript{One} y {P-S}\textsubscript{All}. La diferencia entre ambos es que el primero de ellos contendrá solamente una evidencia, elegida aleatoriamente; el otro contendrá todas las evidencias concatenadas junto al titular, como hemos mencionado anteriormente.
+
+De esta forma, ambos \textit{datasets} {P-S}\textsubscript{One} y {P-S}\textsubscript{All} tendrán el mismo número de muestras, 789, aunque con diferente información, teniendo el \textit{dataset} {P-S}\textsubscript{All} más información contextual sobre el hecho sucedido.
+
+De esta forma, obtenemos estos dos \textit{datasets} con las siguientes características:
+
+\begin{table}[htb]
+    \centering
+    \begin{tabular}{ccrr}
+        \hline
+        \textbf{Dataset} & \textbf{Etiqueta} & \multicolumn{1}{c}{\textbf{Conteo}} & \multicolumn{1}{c}{\textbf{Total}} \\\hline
         \multirow{2}{*}{PolitiFact} & True & 186 & \multirow{2}{*}{356} \\
          & False & 170 &  \\ \hline
         \multirow{2}{*}{Snopes} & True & 116 & \multirow{2}{*}{433} \\
          & False & 317 & \\\hline
     \end{tabular}
-    % \caption{Conteo de muestras.}
-    % \label{tab:sp-new}
-    \hfill
-    \begin{tabular}{cr}
-        \hline
-        \textbf{Estadístico} & \multicolumn{1}{c}{\textbf{Valor}} \\ \hline
-        $\mu$ & 7,43 \\
-        $\sigma$ & 6,34 \\
-        Mín. & 1 \\
-        \text{Q}\textsubscript{1} & 2 \\
-        \text{Q}\textsubscript{2} & 5 \\
-        \text{Q}\textsubscript{3} & 11 \\
-        Máx. & 27 \\\hline
-    \end{tabular}
-    % \label{tab:sp-stats}
-    \hfill\null
-    \caption{Conteo de muestras y estadísticos de longitud de noticias.}
+    \caption{Conteo de muestras según categorías.}
+    \label{tab:sp-new}
 \end{table}
-% \end{frame}
 
-\end{frame}
+Podemos observar que existe un pequeño desbalanceo entre clases \textit{True}/\textit{False}, donde la proporción entre noticias falsas y verdaderas es de 3:2 respectivamente. Debido a que este desbalanceo no es tan pronunciado, consideramos que no es necesario aplicar alguna técnica de balanceo entre clases.
 
-\begin{frame}{4.3. Dataset: News\footnote{\citep{Ahmed2017}}}
-% \textbf{News .} Contiene artículos periodísticos de diferentes temática. Las noticias fueron limpiadas y procesadas, aunque para las falsas no se corrigieron los errores tipográficos.
+Por último, con respecto al \textit{dataset} {P-S}\textsubscript{All}, consideramos pertinente mostrar las siguientes estadísticas sobre el número de evidencias por noticia:
 
-% \vspace{2ex}
-\begin{itemize}
-    \item Artículos periodísticos completos de diversas fuentes.
-    \item Limpieza adicional para las noticias verdaderas: autor, aclaraciones.
-\end{itemize}
-% Artículos periodísticos completos de diversas fuentes. Limpieza adicional para las noticias verdaderas.
-
-% Adicionalmente, eliminamos fragmentos de texto al principio de las noticias verdaderas relacionadas con la ubicación o aclaraciones para evitar que el modelo aprenda estas estructuras y las utilice en la clasificación.
-
-\vspace{2ex}
-
-\begin{table}
+\begin{table}[htb]
     \centering
     \begin{tabular}{cr}
         \hline
-        \textbf{Etiqueta} & \textbf{\#} \\ \hline
-        {True} & {21417} \\ \hline
-        {False} & {23481} \\
-        \hline
+        \textbf{Estadístico} & \multicolumn{1}{c}{\textbf{Valor}} \\ \hline
+        Media & 7,43 \\
+        Desviación estándar & 6,34 \\
+        Mínimo & 1 \\
+        \text{Q}\textsubscript{1} & 2 \\
+        \text{Q}\textsubscript{2} & 5 \\
+        \text{Q}\textsubscript{3} & 11 \\
+        Máximo & 27 \\\hline
     \end{tabular}
-    \caption{Conteo de muestras.}
-    % \label{fig:news-dataset}
+    \caption{Estadísticas con respecto al número de evidencias por noticia.}
+    \label{tab:sp-stats}
 \end{table}
 
-\end{frame}
+Como podemos observar, al menos el 75\% de noticias tienen 2 evidencias o más, por lo que aunque los \textit{datasets} \textit{datasets} {P-S}\textsubscript{One} y {P-S}\textsubscript{All} parten del mismo conjunto de datos original, {P-S}\textsubscript{All} tiene considerablemente más información contenida por noticia que su contraparte {P-S}\textsubscript{One}.
 
-% \begin{frame}{Normalización y limpieza; creación de conjuntos \textit{train}, \textit{evaluation}, \textit{test}}
 
-% \textbf{Normalización y limpieza.} Para trabajar con los modelos estadísticos, aplicamos un paso adicional de normalización y limpieza del texto: sustituimos acrónimos, convertimos a minúsculas, expandimos contracciones, eliminamos cadenas indeseadas (enlaces \textit{web}, \textit{tags} HTML, cárácteres mal codificados, etc.), eliminamos \textit{stop words}, tokenizamos cada palabra y lematizamos.
+\subsubsection{ISOT Fake News Dataset}
 
-% \vspace{2ex}
+En este \textit{dataset} podemos encontrar para las noticias reales que todas comienzan por la ubicación del suceso y la agencia de noticias, de la siguiente forma:
 
-% \textbf{Conjuntos \textit{train}, \textit{evaluation}, \textit{test}.} Para los modelos estadísticos hacemos una división 4:1 para entrenamiento y test respectivamente. En el caso de los modelos basados en \textit{transformers}, creamos tres conjuntos con ratios 8:1:1.
+\begin{center}
+\begin{BVerbatim*}
+`BARCELONA/GIRONA, Spain (Reuters) - '
+\end{BVerbatim*}
+\end{center}
 
-% \end{frame}
 
-\begin{frame}{4.4. Modelos y clasificadores utilizados}
+También es posible encontrar aclaraciones a principio de esta información, como puede ser:
 
-Modelos estadísticos (\texttt{scikit-learn}):
+\begin{center}
+\begin{BVerbatim*}
+`(This Oct. 9 story has been refiled to add a 
+dropped word in the headline) By Sonya Dowsett'
+\end{BVerbatim*}
+\end{center}
+
+Es por ello que hemos borrado estos fragmentos de texto para evitar que el modelo pueda aprender a utilizar estas estructuras y diferenciar entre noticias verdaderas y falsas, ya que en el caso de las falsas esto no sucede.
+
+Como el \textit{dataset} está dividido en dos archivos, cada uno conteniendo las noticias de una label concreta (\textit{True}/\textit{False}), añadimos una columna adicional para codificar la categoría a la que pertenecen y concatenamos ambos \textit{datasets} para obtener el \textit{dataset} final con todas las noticias.
+
+Posteriormente, concatenamos los \emph{strings} para el titular y el cuerpo de la noticia.
+
+\subsubsection{Normalización y limpieza}
+
+Después de haber obtenido los \textit{datasets} procesados con los que vamos a entrenar los modelos, aplicamos un paso adicional de normalización y limpieza de texto para los modelos \textit{Bag of Words} y TF-IDF.
+
+Para ello, aplicamos los siguientes pasos:
+\begin{enumerate}
+    \item Sustituimos diferentes acrónimos de estados, organizaciones, siglas y palabras malsonantes censuradas por sus equivalentes.
+    \item Convertimos el texto a minúsculas
+    \item Expandimos contracciones
+    \item Eliminamos enlaces web, \emph{tags} HTML, caracteres mal codificados, símbolos de puntuación y otros caracteres indeseados.
+    \item Eliminamos \emph{stop words}
+    \item Tokenizamos cada palabra
+    \item Lematizamos cada token
+\end{enumerate}
+
+\subsubsection{Creación de conjuntos de entrenamiento, validación y test}
+
+Para el entrenamiento de los modelos \textit{Bag of Words} y TF-IDF, hacemos uso de la librería \texttt{scikit-learn} \citep{scikit} y hacemos dos conjuntos: entrenamiento y test, debido a que no es necesario un conjunto de validación en esta implementación.
+
+Estos dos conjuntos se dividen en un ratio 8:2 para entrenamiento y test respectivamente. De esta manera, la misma proporción de muestras se dedican al entrenamiento para estos modelos como para los \textit{transformers}.
+
+En el caso del entrenamiento de los modelos basados en \textit{transformers}, aprovechamos la clase \texttt{Dataset} de la librería \texttt{datasets} \citep{datasets} y creamos tres conjuntos: entrenamiento, validación y test. Como hemos adelantado, la división se hace de forma 8:1:1 respectivamente; evitando que ninguno de los modelos tengan acceso a un mayor número de muestras durante su entrenamiento.
+
+\section{Modelos y clasificadores utilizados}
+
+\subsection{Bag of Words}
+
+Es una técnica de representación de documentos la cual se basa en contabilizar el número de veces que aparece cierta palabra en el documento. De esta forma, dos documentos serán similares si contienen las mismas palabras \citep{Vajjala2020}. Este modelo es denominado de esta manera ya que solamente incluye información sobre el conteo de cada palabra, ignorando cualquier información (gramatical, contextual, etc.) a excepción de las palabras en si \citep{Eisenstein2019}.
+
+\subsection{TF-IDF}
+
+TF-IDF modela la información de forma similar al modelo \textit{Bag of Words}, ya que no almacena ningún tipo de información gramatical o contextual. Lo novedoso de este modelo es que introduce los conceptos de \textit{term-frequency} y \textit{inverse document frequency}.
+
+Se basa en el siguiente hecho: si una palabra concreta aparece repetidas veces en un documento pero no en el resto, entonces esta palabra debe ser importante o representativa para ese documento. Es por ello que la importancia de una palabra determinada debe incrementarse proporcionalmente a su frecuencia en un documento determinado; también, esta debe disminuir proporcionalmente a su frecuencia en otros documentos del corpus \citep{Vajjala2020}.
+
+Matemáticamente, esta relación es capturada usando la \textit{term-frequency} y \textit{inverse document frequency}, que combinadas generan el \textit{TF-IDF score}.
+
+TF \textit{(term-frequency)} mide la frecuencia de una palabra $p$ en un documento $d$.
+
+IDF \textit{(inverse document frequency)} mide la importancia de una palabra $p$ en el corpus, dando más peso a las palabras menos frecuentes (o las más inusuales). Se define como:
+
+\begin{equation}
+    \text{IDF}(p, D) = \ln{\frac{D}{\lvert\left\{d\in D: p \in d\right\}\rvert}}
+\end{equation}
+
+Siendo $D$ el número total de documentos en el corpus y $\lvert\left\{d\in D: p \in d\right\}\rvert$ el número de documentos donde la palabra $p$ aparece.
+
+Finalmente el \textit{TF-IDF score} se calcula de la siguiente manera:
+
+\begin{equation}
+    \text{TF-IDF}(p, d, D) = \text{TF}(p, d) \cdot \text{IDF}(p, D)
+\end{equation}
+
+\subsection{Regresión logística}
+
+La regresión logística es un método estadístico que modela la relación entre una variable dependiente y una o más variables independientes. Se utiliza para problemas de clasificación binaria.
+
+Para tareas de clasificación de texto, la regresión logística funciona calculando una suma de las características de entrada (en nuestro caso la representación mediante \textit{Bag of Words} o TF-IDF) y calculando mediante una función logística el resultado. 
+
+El modelo de regresión logística toma los valores de entrada y aprende a predecir la probabilidad de cada clase basándose en las características de entrada. El modelo hace esto aprendiendo un conjunto de pesos para cada característica que se utilizan para calcular una suma ponderada de las características de entrada. Esta suma ponderada se pasa luego a través de la función logística para producir un valor de probabilidad para cada clase.
+
+\subsection{Naïve Bayes}
+
+Naïve Bayes es un algoritmo probabilístico basado en el teorema de Bayes. Establece que la probabilidad de una hipótesis (en este caso, una clase) es proporcional a la probabilidad de la evidencia (en este caso, las características de entrada) dada esa hipótesis.
+
+En la clasificación de texto, Naïve Bayes funciona calculando la probabilidad de cada clase dada las características de entrada. Lo hace asumiendo que las características de entrada son condicionalmente independientes dadas las clases. Esta suposición se llama suposición `ingenua'\ o `naïve', y es lo que le da al algoritmo su nombre.
+
+El algoritmo Naïve Bayes luego calcula la probabilidad de cada clase dada las características de entrada utilizando el teorema de Bayes. Específicamente, calcula la probabilidad previa de cada clase (es decir, la probabilidad de cada clase antes de ver ninguna evidencia), y luego multiplica esto por la verosimilitud de la evidencia dada cada clase (es decir, la probabilidad de ver las características de entrada dadas cada clase). Finalmente, normaliza estas probabilidades para obtener una distribución de probabilidad sobre las clases.
+
+\subsection{Clasificadores lineales: SVM y SGD}
+
+Los clasificadores lineales funcionan aprendiendo una función lineal que mapea las características de entrada a las clases de salida. Por esta razón, son similares a la regresión logística.
+
+Las máquinas de vectores de soporte (SVM) son un tipo de clasificador lineal que funcionan encontrando el hiperplano que separa al máximo las características de entrada en diferentes clases. El hiperplano se elige de manera que maximice el margen entre las clases. El margen se define como la distancia entre el hiperplano y los puntos de datos más cercanos de cada clase.
+
+La función de pérdida del perceptrón es un tipo de función de pérdida que se utiliza para entrenar SVM. Funciona minimizando la distancia entre la salida predicha y la salida verdadera. Específicamente, minimiza la suma de las distancias entre cada salida predicha y su correspondiente salida verdadera.
+
+\subsection{Random Forest}
+
+El algoritmo Random Forest funciona construyendo múltiples árboles de decisión y luego combinando sus predicciones.
+
+Cada árbol de decisión se construye seleccionando aleatoriamente un subconjunto de las características de entrada y luego particionando recursivamente los datos en función de estas características. La partición se realiza de tal manera que los subconjuntos resultantes sean lo más puros posible con respecto a las clases de salida.
+
+Una vez que se han construido todos los árboles de decisión, sus predicciones se combinan para obtener una predicción final. Esto se hace típicamente tomando una mayoría de votos sobre todos los árboles de decisión.
+
+\subsection{BERT}
+
+\citet{Devlin2018} discute que las técnicas de aprendizaje hasta el momento limitan las capacidades de los LLMs, concretamente ELMo \citep{Peters2018} y GPT \citep{Radford2018} tienen una forma de aprendizaje unidireccional. Esto puede mermar tareas como \emph{question answering}, las cuales se benefician de disponer de contexto por ambos lados.
+
+BERT está basado en la arquitectura de los Transformers propuesta por \citet{Vaswani2017} y propone una arquitectura bi-direccional en la cual el modelo aprenderá siguiendo estas dos tareas:
+
+Inspirados en la Prueba cloze o \emph{Cloze test} \citep{Taylor1953}, se enmascaran una parte de los \emph{tokens} en el texto para que el modelo prediga cuál va en su lugar; esta tarea la denominan como \emph{Masked LM} (MLM). Esta tarea se distingue de los \emph{denoising auto-encoders} en el hecho de que el objetivo consiste en predecir el \emph{token} enmascarado, en lugar de reconstruir completamente el \emph{input}.
+
+La segunda tarea que desempeña el modelo en su entrenamiento es la denominada \emph{Next Sentence Prediction} (NSP). A partir de un par de frases, el modelo debe clasificar si la segunda frase es continuación de la primera.
+
+\subsection{DistilBERT}
+
+DistilBERT \citep{Sanh2019} se basa en el concepto de \emph{Knowledge Distillation}, donde un modelo compacto `alumno'\ es entrenado para reproducir el comportamiento del modelo `profesor', de mayor tamaño.
+
+Siguiendo una arquitectura del modelo `profesor', el modelo `alumno' tiene una arquitectura similar aunque reducida en el número de capas, el cual se reduce a la mitad. 
+
+Otro truco se aplica en la inicialización de los parámetros del modelo `alumno': aprovechando que la arquitectura de ambos modelos es similar y por lo tanto su dimensionalidad también es similar, aprovechan los pesos del modelo `profesor' para inicializar los pesos del `alumno'.
+
+En resumen, DistilBERT consigue reducir el tamaño del modelo en un 40\% y la complejidad de computación en un 60\%, reteniendo el 97\% de capacidades del modelo original.
+
+\subsection{RoBERTa}
+
+RoBERTa \citep{Liu2019} mejora el rendimiento de BERT mediante mejoras en el proceso de aprendizaje y mejora de hiperparámetros, ya que descubrieron que este estaba infra-entrenado. Es por ello que proponen los siguientes cambios con respecto a la arquitectura y el proceso de entrenamiento:
+
+Primero, descartan el entrenamiento mediante \emph{Next Sentence Prediction}, ya que consideran que su contribución mina el rendimiento global del modelo. Es por ello, que después de diversos experimentos llegan a la conclusión que eliminando esta tarea se consiguen rendimientos iguales o mejores, por lo que se puede prescindir perfectamente de esta tarea.
+
+La siguiente modificación tiene relación con el valor del \emph{learning rate} y el \emph{batch size}. El trabajo de \citet{Ott2018} dejan entrever que aumentar el \emph{batch size} permite una aceleración en el aprendizaje además de una mejora en el rendimiento del modelo, siempre y cuando el valor del \emph{learning rate} se ajuste acordemente. Por otro lado, también se ha descubierto que BERT se puede aprovechar de este tipo de entrenamiento \citep{You2019}. 
+
+Motivado por los trabajos mencionados anteriormente, \citet{Liu2019} aumenta \emph{batch size} de 256 llegando hasta 8.192 muestras por \emph{batch}, obteniendo mejoras en los valores de \emph{perplexity} y rendimiento en tareas finales.
+
+Por último, la última mejora propuesta se enlaza con la tarea de \emph{Masked LM}: se mejora el proceso de enmascarado de los \emph{tokens}: en el caso de BERT este enmascarado es estático, enmascarando solo un tipo determinado de \emph{tokens}. El enmascarador dinámico de RoBERTa enmascara diferentes tipos de \emph{tokens} según cada época en el entrenamiento, haciendo que el modelo sea menos dependiente en los patrones de las frases y por tanto más robusto.
+
+Después de comentar los diferentes aspectos con respecto al proceso de entrenamiento, solamente quedaría mencionar el corpus utilizado. Inspirado por el trabajo de \citet{Yang2019}, decidieron utilizar también un corpus considerablemente grande, sobre unas 10 veces más grande que el utilizado para entrenar BERT. Esto resulta ser idóneo para obtener un buen rendimiento en el modelo sin dar indicios de sobreajuste.
+
+\subsection{DeBERTa}
+
+DeBERTa \citep{He2020} propone una mejora en la arquitectura de BERT \citep{Devlin2018} la cual se basa en el principio de \emph{Disentangled Attention}:
+
+En el caso de BERT, cada palabra en la capa de \emph{inputs} es representada en forma de vector como la suma del valor del \emph{word embedding} y \emph{position embedding}. DeBERTa propone trabajar estos dos valores por separado y calcular los valores de atención mediante \emph{disentangled matrices}, teniendo en cuenta estos valores de posición y contenido.
+
+Esto se justifica en el hallazgo de que la atención para un par de palabras depende tanto del contenido de las palabras como de su posición relativa entre ellas.
+
+Mediante este novedoso mecanismo de atención, DeBERTa consigue mejorar el rendimiento de BERT y RoBERTa, especialmente en tareas que requieren un razonamiento exhaustivo de diferentes partes de la \emph{input}.
+
+
+\section{Material, recursos utilizados e implementación}
+
+El trabajo realizado en este proyecto se ha desarrollado en Python 3.9 \citep{python}, utilizando Jupyter Notebook \citep{jupyter} como interfaz de programación principal para la implementación. El código ha sido desarrollado y probado a pequeña escala en un ordenador de tipo usuario, mientras que el grueso del entrenamiento, evaluación y testeo de los modelos ha sido ejecutado en un servidor proporcionado por la Universitat de València.
+
+Las librerías utilizadas fueron las siguientes: \texttt{pandas} \citep{pandas}, \texttt{numpy} \citep{numpy}, \texttt{scikit-learn} \citep{scikit}, \texttt{nltk} \citep{nltk}, \texttt{pytorch} \citep{pytorch}, \texttt{transformers} \citep{transformers}, \texttt{datasets} \citep{datasets}, \texttt{shap} \citep{SHAP}.
+
+Por otro lado, las especificaciones del servidor provisto son las siguientes:
 \begin{itemize}
-    \item \textit{Bag of Words} y TF-IDF: 
-    \begin{itemize}
-        \item Regresión logística (LR)
-        \item Naïve Bayes (NB)
-        \item Support Vector Machine (SVM)
-        \item Stochastic Gradient Descent (SGD)
-        \item Random Forest (RF)
-        
-    \end{itemize}
+    \item 1x Intel\textsuperscript{\textregistered}  Xeon\textsuperscript{\textregistered} CPU E5-2650 v4 @ 2.20GHz
+    \item 264 GB RAM DRR4
+    \item 1x NVIDIA\textsuperscript{\textregistered}  Tesla\textsuperscript{\textregistered} P100-PCIE-12GB
 \end{itemize}
 
-\vspace{2ex}
-
-Modelos\footnote{\citep{Devlin2018,Sanh2019,Liu2019,He2020}} basados en \textit{transformers} (\texttt{transformers} + \texttt{pytorch}):
-\begin{itemize}
-    \item BERT%: arquitectura bi-direccional; dos tareas: MLM y NSP.
-    \item DistilBERT%: basado en \textit{Knowledge Distillation}; reducción del 40\% del tamaño, 60 \% en complejidad de computación, reteniendo el 97 \% de capacidades.
-    \item RoBERTa%: mejoras en aprendizaje \sout{(NSP)} y ajuste de hiperparámetros.
-    \item DeBERTa%: basado en \textit{Disentangled Attention}; \textit{word} y \textit{position embeddings} por separado; mejora de rendimiento en tareas que requieren razonamiento exhaustivo.
-\end{itemize}
-
-\end{frame}
+El \emph{script} de entrenamiento de los modelos tardó en ejecutar un total de 2 días y 13 horas de forma ininterrumpida, ya que se ejecutó con el comando \texttt{nohup} \citep{coreutils}. El resto del código implementado ha sido ejecutado de forma \emph{online} con Jupyter Notebook debido a las facilidades que aporta.

@@ -1,15 +1,40 @@
-\begin{frame}{6. Discusión}
+\section{Explicabilidad de los modelos}
+\label{sec:expl}
 
-\begin{itemize}
-    \item SHAP: limitaciones en la interpretación (alta variabilidad, escasa justificación matemática, etc.).
-    \item Limitaciones de los modelos BERT: conocimiento sintáctico, semántico, sentido común, etc.
-    \item Posibles sesgos:
-    \begin{itemize}
-        \item \textit{Word Embeddings}: sesgos implícitos, diferencia de criterios estático \textit{vs.} contextuales.
-        \item Tokenización: \textit{cased} \textit{vs.} \textit{uncased}.
-        \item Destilado de modelos: $\uparrow$ sesgos, no relacionado con tamaño del modelo.
-        \item Modelos aumentados: mayor capacidad de adquirir sesgos.
-    \end{itemize}
-\end{itemize}
+El artículo de \citet{Dillon2021} recalca que hay que tener cuidado al interpretar los resultados obtenidos mediante técnicas como SHAP en búsqueda de conclusiones causales, ya que estas pueden ser erróneas o basarse en hechos infundados. Debido a que los modelos predictivos asumen ciertos comportamientos iguales en el futuro, los esquemas de correlación también se mantendrán constantes.
 
-\end{frame}
+La revisión de \citet{Mosca2022} introduce otras técnicas basadas en valores Shapley, como \textit{L-Shapley} o \textit{C-Shapley}, y comenta críticas de otros trabajos hacia el uso en general del uso de valores Shapley en modelos de lenguaje que debatiremos a continuación.
+
+\citet{Kumar2020} muestra que usar los valores Shapley puede provocar inconsistencias, las cuales añaden complexidad a los modelos que intentan mitigarlas. \citet{Merrick2019} critica la poca justificación o explicación en la incertidumbre en las explicaciones producidas mediante valores Shapley. En este caso muestran como pequeñas diferencias pueden generar efectos sobredimensionados en los resultados obtenidos, incluso en \textit{features} que no tienen relevancia en el modelo.
+
+Cabe recalcar que estos trabajos no están directamente aplicados a tareas de Procesado de Lenguaje Natural. Aún así, consideramos necesario tener en cuenta estas perspectivas para contextualizar sobre todas los factores que influyen en el análisis de los resultados.
+
+\section{Limitaciones de los modelos}
+
+El trabajo de \citet{Rogers2020} ilustra los todos los conocimientos que se saben con respecto a los modelos basados en BERT en diferentes ámbitos.
+
+\textbf{Conocimiento sintáctico.} BERT no `entiende'\ las negaciones y no es sensible al texto con una sintaxis incorrecta (orden de palabras aleatorizado, frases truncadas, sujetos o objetos eliminados \citep{Ettinger2019}
+
+\textbf{Conocimiento semántico.} BERT tiene dificultades a la hora de trabajar con dígitos. Esto es problema del tokenizador WordPiece, que puede dividir números de valores similares de formas muy diferentes, afectando a todos los pasos posteriores del procesamiento y finalmente al resultado.
+
+\textbf{Sentido común.} BERT no consigue llevar a cabo tareas de inferencia pragmática correctamente \citep{Ettinger2019} ni razonar a partir de su conocimiento del mundo \citep{Forbes2019, Zhou2019, Richardson2019}
+
+Estos puntos mencionados dificultan el desarrollo de aplicaciones basadas en estas familias de modelos, concretamente el entrenamiento de modelos basado en hechos, ya que BERT tiene dificultades en el razonamiento. Aunque nuestra aplicación esté basada en características estilísticas, creemos que la falta de sensibilidad hacia las negaciones, estructuras sintácticas incorrectas o el problema a la hora de tratar con dígitos si que puede afectarnos en mayor o menor medida en los resultados obtenidos.
+
+
+\section{Posibles sesgos}
+\label{sec:biases}
+
+En esta sección haremos una revisión bibliográfica sobre los trabajos realizados con respecto a determinar sesgos en LLMs.
+
+\textbf{Word Embeddings estáticos y contextuales.} La investigación de \citet{Kurita2019} muestra que existen sesgos semánticos similares en \textit{word embeddings} contextuales al igual como sucede en los \textit{word embeddings} estáticos \citep{Caliskan2017}. Es más, el \textit{Word Embedding Associate Test} (WEAT) \citep{Caliskan2017}, no es directamente aplicable en estos modelos, debido a su naturaleza contextual. En el caso de aplicar esta métrica para reducir los sesgos en los modelos de lenguaje contextuales no es suficiente e incluso puede agravarlos aún más \citep{Silva2021}.
+
+% \citet{Silva2021,Vig2020,Basta2019,Bommasani2020} han demostrado encontrar sesgos similares en este tipo de modelos basados en \textit{transformers}:
+
+\textbf{Destilado de modelos.} Concretamente, los modelos destilados (en el caso de DistilBERT y DistilRoBERTa) muestran un sesgo estadísticamente mayor y más fuerte que en sus versiones no destiladas (BERT y RoBERTa) \citep{Silva2021}. Esto está en línea de los hallazgos de \citet{Hooker2020}, que encuentran que el proceso de destilado de modelos de visión daña desproporcionadamente a grupos minorizados. Aunque los trabajos de \citet{Gilburt2019,TanCelis2019} concluyen que aumentar el tamaño del modelo conlleva una reducción en el sesgo, \citet{Silva2021,Nadeem2021} demuestran lo contrario.
+
+\textbf{Tokenización.} La tokenización es también crucial a la hora de desvelar sesgos: los modelos \textit{uncased}, es decir los que no distinguen entre palabras capitalizadas y no capitalizadas suelen mostrar menos sesgos y por lo tanto mayor diversidad con respecto a nombres y pronombres \citep{Silva2021}
+
+\textbf{Modelos aumentados.} Mediante el trabajo de \citet{Vig2020}, podemos vislumbrar que los LLMs, concretamente las versiones aumentadas (véase las versiones LARGE de los modelos tratados a lo largo de este trabajo) tienen mayor capacidad de `sintetizar'\ o adquirir sesgos, aunque estos se manifiestan en una pequeña proporción de neuronas o \textit{attention heads}. El análisis cuantitativo desempeñado muestra que pueden existir componentes en estos modelos `encargados'\ explícitamente de reproducir sesgos o prejuicios (concretamente en este estudio solo se tratan estereotipos de género).
+
+En conclusión, en este trabajo utilizamos modelos pre-entrenados basados en BERT, los cuales están demostrados que están sesgados. Es por ello que hay que tener en consideración para futuras investigaciones todos los factores que afectan al sesgo de los modelos para intentar reducirlo o en el caso de que no sea posible, tenerlo en cuenta en el análisis de los resultados.
