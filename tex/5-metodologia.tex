@@ -1,40 +1,9 @@
-\label{sec:metodologia}
+% \begin{frame}{Metodología aplicada}
 
-\section{Entrenamiento de modelos estadísticos}
+% \textbf{Entrenamiento de modelos estadísticos:} utilizamos la librería \texttt{scikit-learn}\footnote{\citep{scikit}}, entrenamos el vectorizador y el clasificador con el conjunto de entrenamiento. Determinamos una serie de parámetros para los vectorizadores y después de entrenar los modelos y los clasificadores, realizamos las predicciones con el conjunto \textit{test}.
 
-Trabajaremos con la librería \texttt{scikit-learn} \citep{scikit}, la cual tiene gran variedad de modelos y clasificadores. Mediante un bucle, seleccionamos en cada iteración un vectorizador (BoW/TF-IDF), que se entrenará con el conjunto de entrenamiento. 
+% \vspace{2ex}
 
-Los parámetros elegidos para los vectorizadores son los siguientes:
-\begin{itemize}
-    \item \texttt{analyzer=`word'}: se encarga de hacer la división entre \textit{tokens}, en este caso, la unidad fundamental será la palabra.
-    \item \texttt{ngram\_range=(1,2)}: contabilizamos los tokens tanto individualmente como en combinaciones de dos (bigrama).
-    \item \texttt{token\_pattern=r`\textbackslash w\{1,\}'}: descarta los tokens que no sean caracteres, dígitos ni `\_'.
-    \item \texttt{min\_df=2}: umbral inferior para  eliminar ocurrencias, en este caso, unigramas o bigramas que no aparezcan en al menos dos documentos no serán registrados.
-\end{itemize}
+% \textbf{Entrenamiento de \textit{transformers}:} utilizamos de la librería \texttt{transformers}\footnote{\citep{transformers}} su \textit{tokenizer} correspondiente y hacemos \textit{fine-tuning} con una serie de hiperparámetros determinados (3 épocas). Después utilizamos \texttt{pytorch}\footnote{\citep{pytorch}} para las predicciones.
 
-Para los clasificadores, estos son los parámetros elegidos:
-\begin{itemize}
-    \item \texttt{max\_iter=10000}: número máximo de épocas que se ejecuta el entrenamiento.
-    \item \texttt{tol=1e-5}: criterio de parada, similar a \textit{early stopping}; si el valor para la \textit{training loss} es menor que este valor se detiene el entrenamiento.
-    \item \texttt{random\_state=42}: \textit{seed} para fijar el entrenamiento y no obtener resultados diferentes entre ejecuciones. Solamente sirve en algoritmos heurísticos.
-\end{itemize}
-
-Después, realizamos la predicción con el conjunto de test, guardamos los resultados y calculamos las métricas.
-
-
-\section{Entrenamiento de transformers}
-Hacemos uso de la librería \texttt{transformers} \citep{transformers} para agilizar el entrenamiento de todos los modelos gracias a las clases \texttt{AutoTokenizer} y \texttt{AutoModelForSequence\-Classification}, que permite importar los \textit{tokenizers} y los modelos de lenguaje fácilmente para una serie de modelos que han sido configurado por los desarrolladores previamente para este fin. 
-
-Para cada modelo utilizamos su \textit{tokenizer} correspondiente, añadiendo padding o truncando la \textit{input} si es necesario.
-
-Seleccionamos un \textit{batch size} lo suficientemente grande para acelerar el tiempo de entrenamiento sin desbordar la memoria de la tarjeta gráfica. Existen librerías para determinar programáticamente estos valores, pero por practicidad decidimos determinarlo a mano, obteniendo unos valores de \textit{batch size} entre 32 y 2 muestas dependiendo del tamaño del modelo.
-
-El valor del \textit{learning rate} lo establecemos a $2\mathrm{e}{-5}$ con un valor de \textit{weight decay} de $1\mathrm{e}{-2}$.
-
-Aunque en este trabajo no se haya llegado a implementar un mecanismo de \textit{early stopping}, establecemos la estrategia de evaluación cada época para supervisar que los modelos aprenden correctamente.
-
-Establecemos también un valor de \textit{seed} para fijar los resultados obtenidos en diferentes iteraciones, 
-
-Finalmente, para poder generalizar los resultados entre modelos, decidimos establecer el número de épocas de entrenamiento a 3. Esto nos proporciona un equilibrio entre tiempo de ejecución necesario para los modelos y un aprendizaje suficiente para poder obtener unos resultados coherentes. También fijamos un valor de \textit{seed} y así evitar obtener resultados diferentes entre ejecuciones.
-
-Después del entrenamiento con la librería \texttt{transformers} \citep{transformers}, hacemos la predicción utilizando el conjunto de test. En este caso, por facilidad y flexibilidad a la hora de programar, utilizamos \texttt{pytorch} \citep{pytorch}. Para cada modelo y \textit{dataset} generamos las predicciones y guardamos los resultados para su futuro análisis.
+% \end{frame}
